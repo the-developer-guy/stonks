@@ -37,7 +37,7 @@ class Wallet:
                 self.loaded_wallet = json.load(file)
                 self.fiat = self.loaded_wallet["usd"]
                 for coin in self.loaded_wallet["coins"]:
-                    self.coins[coin["name"]] = {"id": coin["id"], "amount": coin["amount"]}
+                    self.coins[coin["name"]] = coin["amount"]
         except:
             self.fiat = 10000
             self.coins = []
@@ -45,9 +45,9 @@ class Wallet:
     def save(self):
         try:
             with open(self.wallet_file_path, "wt", encoding="utf-8") as file:
-                self.coins_to_save = [{"id": self.coins[coin]["id"], 
-                                       "amount": self.coins[coin]["amount"], 
-                                       "name": coin} for coin in self.coins]
+                self.coins_to_save = [{"name": coin,
+                                        "amount": self.coins[coin]["amount"]} 
+                                        for coin in self.coins]
                 self.wallet_to_save = {"usd": self.fiat, "coins": self.coins_to_save}
                 json.dump(self.wallet_to_save, file)
         except:
@@ -69,5 +69,28 @@ class Wallet:
         sum_usd = 0
         for coin in self.coins:
             if coin in self.supported_coins:
-                sum_usd += self.exchange[coin]["usd"] * self.coins[coin]["amount"]
+                sum_usd += self.exchange[coin]["usd"] * self.coins[coin]
         return sum_usd
+    
+    def get_exchange_rate(self, coin):
+        rate = 0
+        try:
+            rate = self.exchange[coin]["usd"]
+        except KeyError:
+            print(f"Unknown coin: {coin}")
+        return rate
+
+    def buy(self, amount: float, coin: str):
+        if coin not in self.supported_coins:
+            print(f"Unsupported coin: {coin}")
+            return
+        if coin not in self.coins:
+            self.coins[coin] = 0
+        self.update()
+        required_fiat = self.get_exchange_rate(coin) * amount
+        if self.fiat >= required_fiat:
+            self.fiat -= required_fiat
+            self.coins[coin] += amount
+
+    def sell(self, amount: float, coin: str):
+        pass
