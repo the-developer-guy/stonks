@@ -11,6 +11,14 @@ It's an example project for Python. The target audience is the people who try to
 
 The first revision will only include cryptocurrencies, but if I can manage to get a proper (and free) stock API, other commodities will be supported too.
 
+## Requirements
+
+1. Install Python: [Python.org downloads](https://www.python.org/downloads/)
+2. Preferably create a virtual environment (python -m venv .venv)
+3. Install dependencies (pip install -r requirements.txt)
+4. Start the application (python main.py)
+
 ## Episodes on YouTube
 
-1. https://youtube.com/live/hOzLXaORQvc
+1. Introduction: https://youtube.com/live/hOzLXaORQvc
+2. Error handling: https://youtu.be/7qp83-YNeR0
