@@ -12,6 +12,7 @@ menu_options = "\nCommands:\n\
     - quit: save any changes left and quit\n"
 
 while True:
+    print(wallet)
     print(menu_options)
     user_input = input("What do you want? ")
     parts = user_input.split(" ")

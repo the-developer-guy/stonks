@@ -10,6 +10,12 @@ class Wallet:
         self.list_of_coins()
         self.load()
         self.update()
+
+    def __str__(self):
+        summary = f"Wallet summary:\n{self.fiat:.2f} USD"
+        for coin in self.coins:
+            summary += f"\n{self.coins[coin]} {coin}"
+        return summary
     
     def list_of_coins(self):
         self.list = 'https://api.coingecko.com/api/v3/coins/list'
@@ -30,7 +36,7 @@ class Wallet:
             self.supported_coins.add("bitcoin")
             self.supported_coins.add("ethereum")
             self.supported_coins.add("dogecoin")
-    
+
     def load(self):
         try:
             with open(self.wallet_file_path, "rt", encoding="utf-8") as file:
