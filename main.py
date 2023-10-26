@@ -11,7 +11,7 @@ menu_options = "\nCommands:\n\
 
 while True:
     print(wallet)
-    print(f"My current account's value is {wallet.sum_amount():.2f} USD with {wallet.fiat} USD in fiat.")
+    print(f"All your coins worth {wallet.sum_amount():.2f} USD plus {wallet.fiat} USD.")
     print(menu_options)
     user_input = input("What do you want? ")
     parts = user_input.split(" ")
