@@ -1,9 +1,9 @@
-from coin import Coin, Wallet
+from coin import Wallet
 
 
 wallet = Wallet()
 
-print(f"My current account's value is {wallet.sum_amount()} USD with {wallet.fiat} USD in fiat.")
+print(f"My current account's value is {wallet.sum_amount():.2f} USD with {wallet.fiat} USD in fiat.")
 
 menu_options = "\nCommands:\n\
     - update: get latest exchange rates and your portfolio\n\

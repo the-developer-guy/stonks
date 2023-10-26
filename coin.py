@@ -1,16 +1,10 @@
 import requests
 import json
-
-class Coin:
-    def __init__(self, name, id, amount = 0) -> None:
-        self.name = name
-        self.id = id
-        self.amount = amount
         
 
 class Wallet:
     def __init__(self) -> None:
-        self.coins = []
+        self.coins = {}
         self.fiat = 0
         self.wallet_file_path = "wallet.json"
         self.list_of_coins()
@@ -43,7 +37,7 @@ class Wallet:
                 self.loaded_wallet = json.load(file)
                 self.fiat = self.loaded_wallet["usd"]
                 for coin in self.loaded_wallet["coins"]:
-                    self.coins.append(Coin(coin["name"], coin["id"], coin["amount"]))
+                    self.coins[coin["name"]] = {"id": coin["id"], "amount": coin["amount"]}
         except:
             self.fiat = 10000
             self.coins = []
@@ -51,7 +45,9 @@ class Wallet:
     def save(self):
         try:
             with open(self.wallet_file_path, "wt", encoding="utf-8") as file:
-                self.coins_to_save = [{"id": coin.id, "amount":coin.amount, "name": coin.name} for coin in self.coins]
+                self.coins_to_save = [{"id": self.coins[coin]["id"], 
+                                       "amount": self.coins[coin]["amount"], 
+                                       "name": coin} for coin in self.coins]
                 self.wallet_to_save = {"usd": self.fiat, "coins": self.coins_to_save}
                 json.dump(self.wallet_to_save, file)
         except:
@@ -59,8 +55,8 @@ class Wallet:
     
     def update(self):
         self.exhange_url = "https://api.coingecko.com/api/v3/simple/price?ids="
-        for coin in self.coins:
-            self.exhange_url += coin.id
+        for coin_name in self.coins:
+            self.exhange_url += coin_name
             self.exhange_url += ","
         self.exhange_url += "&vs_currencies=usd"
         try:
@@ -72,7 +68,6 @@ class Wallet:
     def sum_amount(self):
         sum_usd = 0
         for coin in self.coins:
-            if coin.id in self.supported_coins:
-                sum_usd += self.exchange[coin.id]["usd"] * coin.amount
+            if coin in self.supported_coins:
+                sum_usd += self.exchange[coin]["usd"] * self.coins[coin]["amount"]
         return sum_usd
-
