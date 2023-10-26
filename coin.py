@@ -22,7 +22,6 @@ class Wallet:
         self.list = 'https://api.coingecko.com/api/v3/coins/list'
         try:
             self.response = requests.get(self.list)
-            print(self.response.content)
             self.all_coins = json.loads(self.response.content.decode())
             self.supported_coins = {coin["id"] for coin in self.all_coins}
         except requests.exceptions.ConnectionError:
