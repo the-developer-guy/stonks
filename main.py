@@ -3,8 +3,6 @@ from coin import Wallet
 
 wallet = Wallet()
 
-print(f"My current account's value is {wallet.sum_amount():.2f} USD with {wallet.fiat} USD in fiat.")
-
 menu_options = "\nCommands:\n\
     - update: get latest exchange rates and your portfolio\n\
     - buy amount coin: buy crypto, example: buy 0.1 bitcoin\n\
@@ -13,6 +11,7 @@ menu_options = "\nCommands:\n\
 
 while True:
     print(wallet)
+    print(f"My current account's value is {wallet.sum_amount():.2f} USD with {wallet.fiat} USD in fiat.")
     print(menu_options)
     user_input = input("What do you want? ")
     parts = user_input.split(" ")
@@ -24,7 +23,9 @@ while True:
         coin = parts[2]
         wallet.buy(amount, coin)
     elif command == "sell":
-        pass
+        amount = float(parts[1])
+        coin = parts[2]
+        wallet.sell(amount, coin)
     elif command == "quit":
         wallet.save()
         break

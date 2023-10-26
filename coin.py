@@ -13,6 +13,7 @@ class Wallet:
 
     def __str__(self):
         summary = f"Wallet summary:\n{self.fiat:.2f} USD"
+        self.update()
         for coin in self.coins:
             summary += f"\n{self.coins[coin]} {coin}"
         return summary
@@ -89,7 +90,7 @@ class Wallet:
     def buy(self, amount: float, coin: str):
         if coin not in self.supported_coins:
             print(f"Unsupported coin: {coin}")
-            return
+            return False
         if coin not in self.coins:
             self.coins[coin] = 0
         self.update()
@@ -97,6 +98,15 @@ class Wallet:
         if self.fiat >= required_fiat:
             self.fiat -= required_fiat
             self.coins[coin] += amount
+        return True
 
     def sell(self, amount: float, coin: str):
-        pass
+        available_amount = self.coins[coin]
+        if coin not in self.coins:
+            print(f"You don't have any of this coin: {coin}")
+            return False
+        if available_amount >= amount:
+            self.update()
+            self.fiat += amount * self.get_exchange_rate(coin)
+            self.coins[coin] -= amount
+            return True
