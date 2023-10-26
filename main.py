@@ -19,7 +19,9 @@ while True:
     if command == "update":
         pass
     elif command == "buy":
-        pass
+        amount = float(parts[1])
+        coin = parts[2]
+        wallet.buy(amount, coin)
     elif command == "sell":
         pass
     elif command == "quit":
