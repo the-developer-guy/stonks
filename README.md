@@ -22,3 +22,4 @@ The first revision will only include cryptocurrencies, but if I can manage to ge
 
 1. Introduction: https://youtube.com/live/hOzLXaORQvc
 2. Error handling: https://youtu.be/7qp83-YNeR0
+3. Virtual Environment (venv): https://www.youtube.com/watch?v=WXypm_-GO8A
