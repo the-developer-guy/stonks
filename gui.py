@@ -8,14 +8,15 @@ class MainWindow:
         self.mainframe = ttk.Frame(self.root)
         self.wallet = Wallet()
 
-        self.balance = BalanceWidget(self.mainframe)
-        self.balance.set_balance(self.wallet)
+        self.balance = BalanceWidget(self.mainframe, self.wallet)
+        self.balance.update_balance()
 
         self.trade = TradeWidget(self.mainframe, self.wallet)
 
         self.placeholder_chart = PhotoImage(file="background.png")
         self.placeholder_chart_label = ttk.Label(self.mainframe, image=self.placeholder_chart)
         
+        self.trade.register_callback(self.balance.update_balance)
         self._configure_frames()
         self._grid()
 
@@ -34,7 +35,8 @@ class MainWindow:
         self.trade.grid(row=0, column=2)
 
 class BalanceWidget:
-    def __init__(self, parent: ttk.Frame) -> None:
+    def __init__(self, parent: ttk.Frame, wallet: Wallet) -> None:
+        self.wallet = wallet
         self.frame = ttk.Frame(parent)
         self.frame.rowconfigure(0, weight=1)
         self.frame.rowconfigure(1, weight=1)
@@ -46,12 +48,13 @@ class BalanceWidget:
         self.label.grid(row=0, column=0, sticky="NWSE")
         self.balance_label.grid(row=1, column=0, sticky="NWSE")
 
-    def set_balance(self, balance):
-        self.balance_label["text"] = balance
+    def update_balance(self):
+        self.balance_label["text"] = self.wallet
 
 class TradeWidget:
     def __init__(self, parent: ttk.Frame, wallet: Wallet) -> None:
         self.wallet = wallet
+        self.update_callback = None
         self.frame = ttk.Frame(parent)
         self.frame.rowconfigure(0, weight=1)
         self.frame.rowconfigure(1, weight=1)
@@ -82,6 +85,11 @@ class TradeWidget:
             self.wallet.buy(amount, coin)
         except Exception as e:
             print(e)
+        if self.update_callback is not None:
+            self.update_callback()
 
     def sell(self):
         print("sell")
+    
+    def register_callback(self, f):
+        self.update_callback = f
