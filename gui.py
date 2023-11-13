@@ -40,8 +40,8 @@ class BalanceWidget:
         self.wallet = wallet
         self.frame = ttk.Frame(parent)
         self.frame.columnconfigure(0, weight=1)
-        self.frame.rowconfigure(0, weight=1)
-        self.frame.rowconfigure(1, weight=1)
+        self.frame.rowconfigure(0, weight=0)
+        self.frame.rowconfigure(1, weight=0)
         self.sum_label = ttk.Label(self.frame, 
                                    text="", 
                                    borderwidth=3, 
@@ -69,10 +69,10 @@ class TradeWidget:
         self.wallet = wallet
         self.update_callback = None
         self.frame = ttk.Frame(parent)
-        self.frame.rowconfigure(0, weight=1)
-        self.frame.rowconfigure(1, weight=1)
-        self.frame.rowconfigure(2, weight=1)
-        self.frame.rowconfigure(3, weight=1)
+        self.frame.rowconfigure(0, weight=0)
+        self.frame.rowconfigure(1, weight=0)
+        self.frame.rowconfigure(2, weight=0)
+        self.frame.rowconfigure(3, weight=0)
         self.frame.columnconfigure(0, weight=1)
         self.frame.columnconfigure(1, weight=1)
 
