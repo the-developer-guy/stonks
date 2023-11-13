@@ -46,7 +46,7 @@ class Wallet:
                     self.coins[coin["name"]] = coin["amount"]
         except:
             self.fiat = 10000
-            self.coins = []
+            self.coins = {}
     
     def save(self):
         try:
