@@ -11,7 +11,7 @@ class MainWindow:
         self.balance = BalanceWidget(self.mainframe)
         self.balance.set_balance(self.wallet)
 
-        self.trade = TradeWidget(self.mainframe)
+        self.trade = TradeWidget(self.mainframe, self.wallet)
 
         self.placeholder_chart = PhotoImage(file="background.png")
         self.placeholder_chart_label = ttk.Label(self.mainframe, image=self.placeholder_chart)
@@ -50,7 +50,8 @@ class BalanceWidget:
         self.balance_label["text"] = balance
 
 class TradeWidget:
-    def __init__(self, parent) -> None:
+    def __init__(self, parent, wallet) -> None:
+        self.wallet = wallet
         self.frame = ttk.Frame(parent)
         self.frame.rowconfigure(0, weight=1)
         self.frame.rowconfigure(1, weight=1)
@@ -62,8 +63,8 @@ class TradeWidget:
         self.label = ttk.Label(self.frame, text="Exchange")
         self.coin = ttk.Entry(self.frame)
         self.amount = ttk.Entry(self.frame)
-        self.buy_button = ttk.Button(self.frame, text="Buy")
-        self.sell_button = ttk.Button(self.frame, text="Sell")
+        self.buy_button = ttk.Button(self.frame, text="Buy", command=self.buy)
+        self.sell_button = ttk.Button(self.frame, text="Sell", command=self.sell)
 
     def grid(self, row, column):
         self.frame.grid(row=row, column=column, sticky="NWSE")
@@ -72,3 +73,9 @@ class TradeWidget:
         self.amount.grid(row=2, column=0, columnspan=2, sticky="NWSE")
         self.buy_button.grid(row=3, column=0, sticky="NWSE")
         self.sell_button.grid(row=3, column=1, sticky="NWSE")
+    
+    def buy(self):
+        print("buy")
+    
+    def sell(self):
+        print("sell")
