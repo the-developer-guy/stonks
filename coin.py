@@ -50,12 +50,12 @@ class Wallet:
     
     def save(self):
         try:
-            with open(self.wallet_file_path, "wt", encoding="utf-8") as file:
-                self.coins_to_save = [{"name": coin,
-                                        "amount": self.coins[coin]["amount"]} 
+            coins_to_save = [{"name": coin,
+                                        "amount": self.coins[coin]} 
                                         for coin in self.coins]
-                self.wallet_to_save = {"usd": self.fiat, "coins": self.coins_to_save}
-                json.dump(self.wallet_to_save, file)
+            wallet_to_save = {"usd": self.fiat, "coins": coins_to_save}
+            with open(self.wallet_file_path, "wt", encoding="utf-8") as file:
+                json.dump(wallet_to_save, file)
         except:
             print("Can't save the wallet data!")
     
@@ -97,6 +97,7 @@ class Wallet:
         if self.fiat >= required_fiat:
             self.fiat -= required_fiat
             self.coins[coin] += amount
+            self.save()
         return True
 
     def sell(self, amount: float, coin: str):
@@ -108,4 +109,5 @@ class Wallet:
             self.update()
             self.fiat += amount * self.get_exchange_rate(coin)
             self.coins[coin] -= amount
+            self.save()
             return True
