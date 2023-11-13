@@ -1,5 +1,6 @@
 import requests
 import json
+from datetime import datetime
         
 
 class Wallet:
@@ -98,6 +99,7 @@ class Wallet:
             self.fiat -= required_fiat
             self.coins[coin] += amount
             self.save()
+            self.log_transaction(-required_fiat, coin, amount)
         return True
 
     def sell(self, amount: float, coin: str):
@@ -107,7 +109,18 @@ class Wallet:
             return False
         if available_amount >= amount:
             self.update()
-            self.fiat += amount * self.get_exchange_rate(coin)
+            fiat_got = amount * self.get_exchange_rate(coin)
+            self.fiat += fiat_got
             self.coins[coin] -= amount
             self.save()
+            self.log_transaction(fiat_got, coin, amount)
             return True
+    
+    def log_transaction(self, fiat_amount: float, coin: str, coin_amount: float):
+        now = datetime.now()
+        if fiat_amount < 0:
+            log_message = f"Bought {coin_amount} {coin} for ${-fiat_amount:.2f} at {now};{fiat_amount};{coin_amount};{coin}{now}\n"
+        else:
+            log_message = f"Sold {coin_amount} {coin} for ${fiat_amount:.2f} at {now};{fiat_amount};{coin_amount};{coin}{now}\n"
+        with open("ledger.log", "at", encoding="utf-8") as file:
+            file.write(log_message)
