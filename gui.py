@@ -40,15 +40,16 @@ class BalanceWidget:
         self.frame = ttk.Frame(parent)
         self.frame.rowconfigure(0, weight=1)
         self.frame.rowconfigure(1, weight=1)
-        self.label = ttk.Label(self.frame, text="Your balance:")
+        self.sum_label = ttk.Label(self.frame, text="")
         self.balance_label = ttk.Label(self.frame, text="")
 
     def grid(self, row, column):
         self.frame.grid(row=row, column=column, sticky="NWSE")
-        self.label.grid(row=0, column=0, sticky="NWSE")
+        self.sum_label.grid(row=0, column=0, sticky="NWSE")
         self.balance_label.grid(row=1, column=0, sticky="NWSE")
 
     def update_balance(self):
+        self.sum_label["text"] = f"Total balance:\n{self.wallet.total_in_usd():.2f} USD"
         self.balance_label["text"] = self.wallet
 
 class TradeWidget:

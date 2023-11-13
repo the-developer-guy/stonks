@@ -79,6 +79,9 @@ class Wallet:
                 sum_usd += self.exchange[coin]["usd"] * self.coins[coin]
         return sum_usd
     
+    def total_in_usd(self):
+        return self.sum_amount() + self.fiat
+    
     def get_exchange_rate(self, coin):
         rate = 0
         try:
