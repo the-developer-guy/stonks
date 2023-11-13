@@ -11,6 +11,8 @@ class MainWindow:
         self.balance = BalanceWidget(self.mainframe)
         self.balance.set_balance(self.wallet)
 
+        self.trade = TradeWidget(self.mainframe)
+
         self.placeholder_chart = PhotoImage(file="background.png")
         self.placeholder_chart_label = ttk.Label(self.mainframe, image=self.placeholder_chart)
         
@@ -23,11 +25,13 @@ class MainWindow:
         self.mainframe.rowconfigure(0, weight=1)
         self.mainframe.columnconfigure(0, weight=1)
         self.mainframe.columnconfigure(1, weight=1)
+        self.mainframe.columnconfigure(2, weight=1)
 
     def _grid(self):
         self.mainframe.grid(row=0, column=0, sticky="NWSE")
         self.placeholder_chart_label.grid(row=0, column=0, sticky="NWSE")
         self.balance.grid(row=0, column=1)
+        self.trade.grid(row=0, column=2)
 
 class BalanceWidget:
     def __init__(self, parent) -> None:
@@ -44,3 +48,27 @@ class BalanceWidget:
 
     def set_balance(self, balance):
         self.balance_label["text"] = balance
+
+class TradeWidget:
+    def __init__(self, parent) -> None:
+        self.frame = ttk.Frame(parent)
+        self.frame.rowconfigure(0, weight=1)
+        self.frame.rowconfigure(1, weight=1)
+        self.frame.rowconfigure(2, weight=1)
+        self.frame.rowconfigure(3, weight=1)
+        self.frame.columnconfigure(0, weight=1)
+        self.frame.columnconfigure(1, weight=1)
+
+        self.label = ttk.Label(self.frame, text="Exchange")
+        self.coin = ttk.Entry(self.frame)
+        self.amount = ttk.Entry(self.frame)
+        self.buy_button = ttk.Button(self.frame, text="Buy")
+        self.sell_button = ttk.Button(self.frame, text="Sell")
+
+    def grid(self, row, column):
+        self.frame.grid(row=row, column=column, sticky="NWSE")
+        self.label.grid(row=0, column=0, columnspan=2, sticky="NWSE")
+        self.coin.grid(row=1, column=0, columnspan=2, sticky="NWSE")
+        self.amount.grid(row=2, column=0, columnspan=2, sticky="NWSE")
+        self.buy_button.grid(row=3, column=0, sticky="NWSE")
+        self.sell_button.grid(row=3, column=1, sticky="NWSE")
