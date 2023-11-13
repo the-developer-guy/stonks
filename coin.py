@@ -129,8 +129,8 @@ class Wallet:
     def log_transaction(self, fiat_amount: float, coin: str, coin_amount: float):
         now = datetime.now()
         if fiat_amount < 0:
-            log_message = f"Bought {coin_amount} {coin} for ${-fiat_amount:.2f} at {now};{fiat_amount};{coin_amount};{coin}{now}\n"
+            log_message = f"Bought {coin_amount} {coin} for ${-fiat_amount:.2f} at {now};{fiat_amount};{coin_amount};{coin};{now}\n"
         else:
-            log_message = f"Sold {coin_amount} {coin} for ${fiat_amount:.2f} at {now};{fiat_amount};{coin_amount};{coin}{now}\n"
+            log_message = f"Sold {coin_amount} {coin} for ${fiat_amount:.2f} at {now};{fiat_amount};{coin_amount};{coin};{now}\n"
         with open("ledger.log", "at", encoding="utf-8") as file:
             file.write(log_message)
