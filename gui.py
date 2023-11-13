@@ -1,3 +1,4 @@
+import tkinter as tk
 from tkinter import ttk, PhotoImage
 from coin import Wallet
 
@@ -14,7 +15,7 @@ class MainWindow:
         self.trade = TradeWidget(self.mainframe, self.wallet)
 
         self.placeholder_chart = PhotoImage(file="background.png")
-        self.placeholder_chart_label = ttk.Label(self.mainframe, image=self.placeholder_chart)
+        self.placeholder_chart_label = ttk.Label(self.mainframe, image=self.placeholder_chart, borderwidth=3, relief="sunken")
         
         self.trade.register_callback(self.balance.update_balance)
         self._configure_frames()
@@ -40,8 +41,8 @@ class BalanceWidget:
         self.frame = ttk.Frame(parent)
         self.frame.rowconfigure(0, weight=1)
         self.frame.rowconfigure(1, weight=1)
-        self.sum_label = ttk.Label(self.frame, text="")
-        self.balance_label = ttk.Label(self.frame, text="")
+        self.sum_label = ttk.Label(self.frame, text="", borderwidth=3, relief="sunken", justify=tk.LEFT)
+        self.balance_label = ttk.Label(self.frame, text="", borderwidth=3, relief="sunken", justify=tk.LEFT)
 
     def grid(self, row, column):
         self.frame.grid(row=row, column=column, sticky="NWSE")
@@ -64,7 +65,7 @@ class TradeWidget:
         self.frame.columnconfigure(0, weight=1)
         self.frame.columnconfigure(1, weight=1)
 
-        self.label = ttk.Label(self.frame, text="Exchange")
+        self.label = ttk.Label(self.frame, text="Exchange", borderwidth=3, relief="sunken")
         self.coin = ttk.Entry(self.frame)
         self.amount = ttk.Entry(self.frame)
         self.buy_button = ttk.Button(self.frame, text="Buy", command=self.buy)
