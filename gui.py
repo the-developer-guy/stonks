@@ -76,6 +76,12 @@ class TradeWidget:
     
     def buy(self):
         print("buy")
-    
+        try:
+            amount = float(self.amount.get())
+            coin = self.coin.get()
+            self.wallet.buy(amount, coin)
+        except Exception as e:
+            print(e)
+
     def sell(self):
         print("sell")
