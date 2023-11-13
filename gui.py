@@ -78,7 +78,6 @@ class TradeWidget:
         self.sell_button.grid(row=3, column=1, sticky="NWSE")
     
     def buy(self):
-        print("buy")
         try:
             amount = float(self.amount.get())
             coin = self.coin.get()
@@ -89,7 +88,14 @@ class TradeWidget:
             self.update_callback()
 
     def sell(self):
-        print("sell")
+        try:
+            amount = float(self.amount.get())
+            coin = self.coin.get()
+            self.wallet.sell(amount, coin)
+        except Exception as e:
+            print(e)
+        if self.update_callback is not None:
+            self.update_callback()
     
     def register_callback(self, f):
         self.update_callback = f
