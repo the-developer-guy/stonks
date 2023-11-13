@@ -17,6 +17,6 @@ class MainWindow:
 
     def _place(self):
         self.mainframe.grid()
-        self.placeholder_chart_label.grid()
-        self.label.grid()
-        self.balance_label.grid()
+        self.placeholder_chart_label.grid(row=0, column=0, rowspan=2)
+        self.label.grid(row=0, column=1)
+        self.balance_label.grid(row=1, column=1)
