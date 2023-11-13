@@ -16,7 +16,7 @@ class Wallet:
         summary = f"Wallet summary:\n{self.fiat:.2f} USD"
         self.update()
         for coin in self.coins:
-            summary += f"\n{self.coins[coin]} {coin}"
+            summary += f"\n{self.coins[coin]:.8g} {coin}"
         return summary
     
     def list_of_coins(self):
