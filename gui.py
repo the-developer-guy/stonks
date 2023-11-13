@@ -39,10 +39,21 @@ class BalanceWidget:
     def __init__(self, parent: ttk.Frame, wallet: Wallet) -> None:
         self.wallet = wallet
         self.frame = ttk.Frame(parent)
+        self.frame.columnconfigure(0, weight=1)
         self.frame.rowconfigure(0, weight=1)
         self.frame.rowconfigure(1, weight=1)
-        self.sum_label = ttk.Label(self.frame, text="", borderwidth=3, relief="sunken", justify=tk.LEFT)
-        self.balance_label = ttk.Label(self.frame, text="", borderwidth=3, relief="sunken", justify=tk.LEFT)
+        self.sum_label = ttk.Label(self.frame, 
+                                   text="", 
+                                   borderwidth=3, 
+                                   relief="sunken", 
+                                   justify=tk.LEFT, 
+                                   anchor=tk.NW)
+        self.balance_label = ttk.Label(self.frame, 
+                                       text="", 
+                                       borderwidth=3, 
+                                       relief="sunken", 
+                                       justify=tk.LEFT, 
+                                       anchor=tk.NW)
 
     def grid(self, row, column):
         self.frame.grid(row=row, column=column, sticky="NWSE")
