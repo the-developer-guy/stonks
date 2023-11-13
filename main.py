@@ -1,5 +1,5 @@
-from tkinter import *
-from tkinter import ttk
+from tkinter import Tk, PhotoImage
+from gui import MainWindow
 from coin import Wallet
 
 
@@ -12,5 +12,7 @@ root = Tk()
 icon = PhotoImage(file="logo.png")
 root.iconphoto(True, icon)
 root.title("Stonks - trading simulator")
+
+main_window = MainWindow(root)
 
 root.mainloop()
