@@ -34,7 +34,7 @@ class MainWindow:
         self.trade.grid(row=0, column=2)
 
 class BalanceWidget:
-    def __init__(self, parent) -> None:
+    def __init__(self, parent: ttk.Frame) -> None:
         self.frame = ttk.Frame(parent)
         self.frame.rowconfigure(0, weight=1)
         self.frame.rowconfigure(1, weight=1)
@@ -50,7 +50,7 @@ class BalanceWidget:
         self.balance_label["text"] = balance
 
 class TradeWidget:
-    def __init__(self, parent, wallet) -> None:
+    def __init__(self, parent: ttk.Frame, wallet: Wallet) -> None:
         self.wallet = wallet
         self.frame = ttk.Frame(parent)
         self.frame.rowconfigure(0, weight=1)
