@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, PhotoImage
+from tkinter import ttk, PhotoImage, messagebox
 from coin import Wallet
 
 
@@ -77,7 +77,8 @@ class TradeWidget:
         self.frame.columnconfigure(1, weight=1)
 
         self.label = ttk.Label(self.frame, text="Exchange", borderwidth=3, relief="sunken")
-        self.coin = ttk.Entry(self.frame)
+        self.coin_var = tk.StringVar()
+        self.coin = ttk.Combobox(self.frame, textvariable=self.coin_var, values=self.wallet.supported_coins)
         self.amount = ttk.Entry(self.frame)
         self.buy_button = ttk.Button(self.frame, text="Buy", command=self.buy)
         self.sell_button = ttk.Button(self.frame, text="Sell", command=self.sell)
@@ -93,20 +94,38 @@ class TradeWidget:
     def buy(self):
         try:
             amount = float(self.amount.get())
-            coin = self.coin.get()
-            self.wallet.buy(amount, coin)
+            coin = self.coin_var.get()
+            success = self.wallet.buy(amount, coin)
+            if not success:
+                messagebox.showwarning("Error", f"Transaction failed!\nNot enough USD in your wallet!")
+        except TypeError as e:
+            print(e)
+            messagebox.showwarning("Error", "Invalid coin!")
+        except ValueError as e:
+            print(e)
+            messagebox.showwarning("Error", "Invalid amount!")
         except Exception as e:
             print(e)
+            messagebox.showwarning("Error", e)
         if self.update_callback is not None:
             self.update_callback()
 
     def sell(self):
         try:
             amount = float(self.amount.get())
-            coin = self.coin.get()
-            self.wallet.sell(amount, coin)
+            coin = self.coin_var.get()
+            success = self.wallet.sell(amount, coin)
+            if not success:
+                messagebox.showwarning("Error", f"Transaction failed!\nNot enough {coin} in your wallet!")
+        except ValueError as e:
+            print(e)
+            messagebox.showwarning("Error", "Invalid amount!")
+        except TypeError as e:
+            print(e)
+            messagebox.showwarning("Error", "Invalid coin!")
         except Exception as e:
             print(e)
+            messagebox.showwarning("Error", e)
         if self.update_callback is not None:
             self.update_callback()
     

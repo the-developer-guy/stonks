@@ -24,7 +24,7 @@ class Wallet:
         try:
             self.response = requests.get(self.list)
             self.all_coins = json.loads(self.response.content.decode())
-            self.supported_coins = {coin["id"] for coin in self.all_coins}
+            self.supported_coins = [coin["id"] for coin in self.all_coins]
         except requests.exceptions.ConnectionError:
             print("Can't connect to the server!")
             self.supported_coins = set()
@@ -93,7 +93,7 @@ class Wallet:
     def buy(self, amount: float, coin: str):
         if coin not in self.supported_coins:
             print(f"Unsupported coin: {coin}")
-            return False
+            raise TypeError(f"Unsupported coin: {coin}")
         if coin not in self.coins:
             self.coins[coin] = 0
         self.update()
@@ -103,9 +103,14 @@ class Wallet:
             self.coins[coin] += amount
             self.save()
             self.log_transaction(-required_fiat, coin, amount)
-        return True
+            return True
+        else:
+            return False
 
     def sell(self, amount: float, coin: str):
+        if coin not in self.supported_coins:
+            print(f"Unsupported coin: {coin}")
+            raise TypeError(f"Unsupported coin: {coin}")
         available_amount = self.coins[coin]
         if coin not in self.coins:
             print(f"You don't have any of this coin: {coin}")
@@ -118,6 +123,8 @@ class Wallet:
             self.save()
             self.log_transaction(fiat_got, coin, amount)
             return True
+        else:
+            return False
     
     def log_transaction(self, fiat_amount: float, coin: str, coin_amount: float):
         now = datetime.now()
