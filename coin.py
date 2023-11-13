@@ -27,16 +27,16 @@ class Wallet:
             self.supported_coins = [coin["id"] for coin in self.all_coins]
         except requests.exceptions.ConnectionError:
             print("Can't connect to the server!")
-            self.supported_coins = set()
-            self.supported_coins.add("bitcoin")
-            self.supported_coins.add("ethereum")
-            self.supported_coins.add("dogecoin")
+            self.supported_coins = []
+            self.supported_coins.append("bitcoin")
+            self.supported_coins.append("ethereum")
+            self.supported_coins.append("dogecoin")
         except:
             print("We are probably rate limited!")
-            self.supported_coins = set()
-            self.supported_coins.add("bitcoin")
-            self.supported_coins.add("ethereum")
-            self.supported_coins.add("dogecoin")
+            self.supported_coins = []
+            self.supported_coins.append("bitcoin")
+            self.supported_coins.append("ethereum")
+            self.supported_coins.append("dogecoin")
 
     def load(self):
         try:
