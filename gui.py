@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, PhotoImage, messagebox
+from datetime import datetime
 from coin import Wallet
 
 
@@ -20,6 +21,12 @@ class MainWindow:
         self.trade.register_callback(self.balance.update_balance)
         self._configure_frames()
         self._grid()
+        self._update()
+
+    def _update(self):
+        self.wallet.update()
+        self.balance.update_balance()
+        self.root.after(30_000, self._update)
 
     def _configure_frames(self):
         self.root.rowconfigure(0, weight=1)
@@ -61,7 +68,8 @@ class BalanceWidget:
         self.balance_label.grid(row=1, column=0, sticky="NWSE")
 
     def update_balance(self):
-        self.sum_label["text"] = f"Total balance:\n{self.wallet.total_in_usd():.2f} USD"
+        now = datetime.now()
+        self.sum_label["text"] = f"Total balance:\n{self.wallet.total_in_usd():.2f} USD\nLast updated: {now.strftime('%H:%M:%S')}"
         self.balance_label["text"] = self.wallet
 
 class TradeWidget:
