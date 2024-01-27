@@ -25,6 +25,7 @@ class Wallet:
             self.response = requests.get(self.list)
             self.all_coins = json.loads(self.response.content.decode())
             self.supported_coins = [coin["id"] for coin in self.all_coins]
+            print(f"{len(self.supported_coins)} coins supported!")
         except requests.exceptions.ConnectionError:
             print("Can't connect to the server!")
             self.supported_coins = []
