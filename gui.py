@@ -15,7 +15,7 @@ class MainWindow:
         self.balance = BalanceWidget(self.mainframe, self.wallet)
 
         self.trade = TradeWidget(self.mainframe, self.wallet)
-        self.chart = ChartWidget(self.mainframe)
+        self.chart = ChartWidget(self.mainframe, self.exchange)
         
         self.trade.register_callback(self.balance.update_balance)
         self._configure_frames()
@@ -25,6 +25,7 @@ class MainWindow:
     def _update(self):
         self.exchange.update()
         self.balance.update_balance()
+        self.chart.update()
         self.root.after(30_000, self._update)
 
     def _configure_frames(self):
@@ -141,14 +142,19 @@ class TradeWidget:
 
 
 class ChartWidget:
-    def __init__(self, parent: ttk.Frame) -> None:
+    def __init__(self, parent: ttk.Frame, exhange: Exchange) -> None:
         self.frame = ttk.Frame(parent)
         self.frame.rowconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=1)
+        self.exchange = exhange
 
-        self.placeholder_chart = PhotoImage(file="background.png")
-        self.placeholder_chart_label = ttk.Label(self.frame, image=self.placeholder_chart, borderwidth=3, relief="sunken")
+        self.val = tk.StringVar()
+        self.placeholder_chart_label = ttk.Label(self.frame, textvariable=self.val, borderwidth=3, relief="sunken")
 
     def grid(self, row, column):
         self.frame.grid(row=row, column=column, sticky="NWSE")
         self.placeholder_chart_label.grid(row=0, column=0, sticky="NWSE")
+
+    def update(self):
+        current_btc = self.exchange.get_rate("bitcoin")
+        self.val.set(f"BTC: {current_btc} USD")
