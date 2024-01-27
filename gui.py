@@ -147,6 +147,7 @@ class ChartWidget:
         self.frame.rowconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=1)
         self.exchange = exhange
+        self.btc_history = []
 
         self.val = tk.StringVar()
         self.placeholder_chart_label = ttk.Label(self.frame, textvariable=self.val, borderwidth=3, relief="sunken")
@@ -156,5 +157,5 @@ class ChartWidget:
         self.placeholder_chart_label.grid(row=0, column=0, sticky="NWSE")
 
     def update(self):
-        current_btc = self.exchange.get_rate("bitcoin")
-        self.val.set(f"BTC: {current_btc} USD")
+        self.btc_history.append(self.exchange.get_rate("bitcoin"))
+        self.val.set(f"BTC: {self.btc_history} USD")
