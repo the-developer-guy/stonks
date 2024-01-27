@@ -22,7 +22,7 @@ class MainWindow:
         self._update()
 
     def _update(self):
-        self.wallet.update()
+        self.wallet.exchange.update()
         self.balance.update_balance()
         self.root.after(30_000, self._update)
 
@@ -84,7 +84,7 @@ class TradeWidget:
 
         self.label = ttk.Label(self.frame, text="Exchange", borderwidth=3, relief="sunken")
         self.coin_var = tk.StringVar()
-        self.coin = ttk.Combobox(self.frame, textvariable=self.coin_var, values=self.wallet.supported_coins)
+        self.coin = ttk.Combobox(self.frame, textvariable=self.coin_var, values=self.wallet.exchange.supported_coins)
         self.amount = ttk.Entry(self.frame)
         self.buy_button = ttk.Button(self.frame, text="Buy", command=self.buy)
         self.sell_button = ttk.Button(self.frame, text="Sell", command=self.sell)
