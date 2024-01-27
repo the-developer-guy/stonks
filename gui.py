@@ -14,9 +14,7 @@ class MainWindow:
         self.balance.update_balance()
 
         self.trade = TradeWidget(self.mainframe, self.wallet)
-
-        self.placeholder_chart = PhotoImage(file="background.png")
-        self.placeholder_chart_label = ttk.Label(self.mainframe, image=self.placeholder_chart, borderwidth=3, relief="sunken")
+        self.chart = ChartWidget(self.mainframe)
         
         self.trade.register_callback(self.balance.update_balance)
         self._configure_frames()
@@ -38,7 +36,7 @@ class MainWindow:
 
     def _grid(self):
         self.mainframe.grid(row=0, column=0, sticky="NWSE")
-        self.placeholder_chart_label.grid(row=0, column=0, sticky="NWSE")
+        self.chart.grid(row=0, column=0)
         self.balance.grid(row=0, column=1)
         self.trade.grid(row=0, column=2)
 
@@ -139,3 +137,17 @@ class TradeWidget:
     
     def register_callback(self, f):
         self.update_callback = f
+
+
+class ChartWidget:
+    def __init__(self, parent: ttk.Frame) -> None:
+        self.frame = ttk.Frame(parent)
+        self.frame.rowconfigure(0, weight=1)
+        self.frame.columnconfigure(0, weight=1)
+
+        self.placeholder_chart = PhotoImage(file="background.png")
+        self.placeholder_chart_label = ttk.Label(self.frame, image=self.placeholder_chart, borderwidth=3, relief="sunken")
+
+    def grid(self, row, column):
+        self.frame.grid(row=row, column=column, sticky="NWSE")
+        self.placeholder_chart_label.grid(row=0, column=0, sticky="NWSE")
