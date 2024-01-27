@@ -1,15 +1,86 @@
 import requests
 import json
 from datetime import datetime
-        
+
+
+class Exchange:
+    
+    def __init__(self, coins: set = set()) -> None:
+        self.coins = {coin for coin in coins}
+        self.current_exchange = {}
+        self.exchange_history = []
+        self.list_of_coins()
+        self.update()
+
+    def list_of_coins(self):
+        self.list = 'https://api.coingecko.com/api/v3/coins/list'
+        try:
+            self.response = requests.get(self.list)
+            self.all_coins = json.loads(self.response.content.decode())
+            self.supported_coins = [coin["id"] for coin in self.all_coins]
+            print(f"{len(self.supported_coins)} coins supported!")
+        except requests.exceptions.ConnectionError:
+            print("Can't connect to the server!")
+            self.supported_coins = []
+            self.supported_coins.append("bitcoin")
+            self.supported_coins.append("ethereum")
+            self.supported_coins.append("dogecoin")
+        except:
+            print("We are probably rate limited!")
+            self.supported_coins = []
+            self.supported_coins.append("bitcoin")
+            self.supported_coins.append("ethereum")
+            self.supported_coins.append("dogecoin")
+
+    def update(self):
+        coins_to_check = [coin for coin in self.coins if coin in self.supported_coins]
+        if len(coins_to_check) > 0:
+            self.exhange_url = "https://api.coingecko.com/api/v3/simple/price?ids="
+            for coin_name in coins_to_check:
+                self.exhange_url += coin_name
+                self.exhange_url += ","
+            self.exhange_url += "&vs_currencies=usd"
+            try:
+                self.response = requests.get(self.exhange_url)
+                decoded_response = json.loads(self.response.content.decode())
+                if "status" in decoded_response:
+                    status = decoded_response["status"]
+                    print(f"Error! {status}")
+                else:
+                    self.current_exchange = decoded_response
+            except:
+                print("Can't update exchange rates!")
+
+    def get_rate(self, coin):
+        """Gets the current exhange rate. Throws KeyError for unsupported coin."""
+        rate = 0
+        try:
+            rate = self.current_exchange[coin]["usd"]
+        except KeyError:
+            print(f"Unknown coin: {coin}")
+        return rate
+    
+    def add_coins(self, coins):
+        match coins:
+            case dict():
+                for key in coins:
+                    self.coins.add(key)
+            case str():
+                self.coins.add(coins)
+            case _:
+                print("Unsupported input")
+    
+    def is_supported_coin(self, coin):
+        return coin in self.supported_coins
+
 
 class Wallet:
-    def __init__(self) -> None:
+    def __init__(self, exchange: Exchange) -> None:
         self.coins = {}
         self.fiat = 0
         self.wallet_file_path = "wallet.json"
         self.load()
-        self.exchange = Exchange(self.coins)
+        self.exchange = exchange
 
     def __str__(self):
         summary = f"Wallet summary:\n{self.fiat:.2f} USD"
@@ -94,57 +165,3 @@ class Wallet:
             log_message = f"Sold {coin_amount} {coin} for ${fiat_amount:.2f} at {now};{fiat_amount};{coin_amount};{coin};{now}\n"
         with open("ledger.log", "at", encoding="utf-8") as file:
             file.write(log_message)
-
-
-class Exchange:
-    
-    def __init__(self, coins: set) -> None:
-        self.coins = {coin for coin in coins}
-        self.current_exchange = {}
-        self.exchange_history = []
-        self.list_of_coins()
-        self.update()
-
-    def list_of_coins(self):
-        self.list = 'https://api.coingecko.com/api/v3/coins/list'
-        try:
-            self.response = requests.get(self.list)
-            self.all_coins = json.loads(self.response.content.decode())
-            self.supported_coins = [coin["id"] for coin in self.all_coins]
-            print(f"{len(self.supported_coins)} coins supported!")
-        except requests.exceptions.ConnectionError:
-            print("Can't connect to the server!")
-            self.supported_coins = []
-            self.supported_coins.append("bitcoin")
-            self.supported_coins.append("ethereum")
-            self.supported_coins.append("dogecoin")
-        except:
-            print("We are probably rate limited!")
-            self.supported_coins = []
-            self.supported_coins.append("bitcoin")
-            self.supported_coins.append("ethereum")
-            self.supported_coins.append("dogecoin")
-
-    def update(self):
-        self.exhange_url = "https://api.coingecko.com/api/v3/simple/price?ids="
-        for coin_name in self.coins:
-            self.exhange_url += coin_name
-            self.exhange_url += ","
-        self.exhange_url += "&vs_currencies=usd"
-        try:
-            self.response = requests.get(self.exhange_url)
-            self.current_exchange = json.loads(self.response.content.decode())
-        except:
-            print("Can't update exchange rates!")
-
-    def get_rate(self, coin):
-        """Gets the current exhange rate. Throws KeyError for unsupported coin."""
-        rate = 0
-        try:
-            rate = self.current_exchange[coin]["usd"]
-        except KeyError:
-            print(f"Unknown coin: {coin}")
-        return rate
-    
-    def is_supported_coin(self, coin):
-        return coin in self.supported_coins

@@ -1,17 +1,18 @@
 import tkinter as tk
 from tkinter import ttk, PhotoImage, messagebox
 from datetime import datetime
-from coin import Wallet
+from coin import Wallet, Exchange
 
 
 class MainWindow:
     def __init__(self, root: ttk.Frame) -> None:
         self.root = root
         self.mainframe = ttk.Frame(self.root)
-        self.wallet = Wallet()
-
+        self.exchange = Exchange()
+        self.wallet = Wallet(self.exchange)
+        self.exchange.add_coins(self.wallet.coins)
+        
         self.balance = BalanceWidget(self.mainframe, self.wallet)
-        self.balance.update_balance()
 
         self.trade = TradeWidget(self.mainframe, self.wallet)
         self.chart = ChartWidget(self.mainframe)
@@ -22,7 +23,7 @@ class MainWindow:
         self._update()
 
     def _update(self):
-        self.wallet.exchange.update()
+        self.exchange.update()
         self.balance.update_balance()
         self.root.after(30_000, self._update)
 
