@@ -149,15 +149,13 @@ class ChartWidget:
         self.frame.rowconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=1)
         self.exchange = exhange
-        self.btc_history = [1, 2, 3]
+        self.btc_history = []
 
         self.fig = Figure(dpi=100)
         self.ax = self.fig.add_subplot()
         self.ax.set_xlabel("time")
         self.ax.set_ylabel("USD")
-        self.line = self.ax.plot(self.btc_history) 
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
-        self.canvas.draw()
 
     def grid(self, row, column):
         self.frame.grid(row=row, column=column, sticky="NWSE")
@@ -165,5 +163,5 @@ class ChartWidget:
 
     def update(self):
         self.btc_history.append(self.exchange.get_rate("bitcoin"))
-        self.line = self.ax.plot(self.btc_history)
+        self.line, = self.ax.plot(self.btc_history, color='green')
         self.canvas.draw()
