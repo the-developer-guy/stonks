@@ -31,12 +31,12 @@ class Exchange:
             self.supported_coins.append("bitcoin")
             self.supported_coins.append("ethereum")
             self.supported_coins.append("dogecoin")
+        self.coins_to_check = {coin for coin in self.coins if coin in self.supported_coins}
 
     def update(self):
-        coins_to_check = [coin for coin in self.coins if coin in self.supported_coins]
-        if len(coins_to_check) > 0:
+        if len(self.coins_to_check) > 0:
             self.exhange_url = "https://api.coingecko.com/api/v3/simple/price?ids="
-            for coin_name in coins_to_check:
+            for coin_name in self.coins_to_check:
                 self.exhange_url += coin_name
                 self.exhange_url += ","
             self.exhange_url += "&vs_currencies=usd"
@@ -69,6 +69,7 @@ class Exchange:
                 self.coins.add(coins)
             case _:
                 print("Unsupported input")
+        self.coins_to_check = {coin for coin in self.coins if coin in self.supported_coins}
     
     def is_supported_coin(self, coin):
         return coin in self.supported_coins
