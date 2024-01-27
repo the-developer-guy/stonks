@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, PhotoImage, messagebox
 from datetime import datetime
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from coin import Wallet, Exchange
 
 
@@ -147,15 +149,21 @@ class ChartWidget:
         self.frame.rowconfigure(0, weight=1)
         self.frame.columnconfigure(0, weight=1)
         self.exchange = exhange
-        self.btc_history = []
+        self.btc_history = [1, 2, 3]
 
-        self.val = tk.StringVar()
-        self.placeholder_chart_label = ttk.Label(self.frame, textvariable=self.val, borderwidth=3, relief="sunken")
+        self.fig = Figure(dpi=100)
+        self.ax = self.fig.add_subplot()
+        self.ax.set_xlabel("time")
+        self.ax.set_ylabel("USD")
+        self.line = self.ax.plot(self.btc_history) 
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
+        self.canvas.draw()
 
     def grid(self, row, column):
         self.frame.grid(row=row, column=column, sticky="NWSE")
-        self.placeholder_chart_label.grid(row=0, column=0, sticky="NWSE")
+        self.canvas.get_tk_widget().grid(row=0, column=0, sticky="NWSE")
 
     def update(self):
         self.btc_history.append(self.exchange.get_rate("bitcoin"))
-        self.val.set(f"BTC: {self.btc_history} USD")
+        self.line = self.ax.plot(self.btc_history)
+        self.canvas.draw()
