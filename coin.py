@@ -62,18 +62,22 @@ class Exchange:
             self.all_coins = json.loads(self.response.content.decode())
             self.supported_coins = [coin["id"] for coin in self.all_coins]
             print(f"{len(self.supported_coins)} coins supported!")
-        except requests.exceptions.ConnectionError:
-            print("Can't connect to the server!")
-            self.supported_coins = []
-            self.supported_coins.append("bitcoin")
-            self.supported_coins.append("ethereum")
-            self.supported_coins.append("dogecoin")
-        except:
+            with open("supported_coins", "wt", encoding="utf-8") as file:
+                for coin in self.supported_coins:
+                    file.write(f"{coin}\n")
+        except OSError as e:
+            print(f"Probably file access problem: {e}")
+        except Exception as e:
             print("We are probably rate limited!")
             self.supported_coins = []
-            self.supported_coins.append("bitcoin")
-            self.supported_coins.append("ethereum")
-            self.supported_coins.append("dogecoin")
+        if len(self.supported_coins) == 0:
+            if os.path.isfile(f"supported_coins"):
+                with open("supported_coins", "rt", encoding="utf-8") as file:
+                    for line in file:
+                        self.supported_coins.append(line)
+            else:
+                self.supported_coins.append("bitcoin")
+                self.supported_coins.append("ethereum")
         self.coins_to_check = {coin for coin in self.coins if coin in self.supported_coins}
 
     def update(self):
