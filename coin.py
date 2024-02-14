@@ -10,6 +10,11 @@ class Coin:
         self.name = name
         self.exchange_rate = 0
 
+    def update_rate(self, rate):
+        if rate != self.exchange_rate:
+            self.exchange_rate = rate
+            self.log_rate()
+
     def log_rate(self):
         timestamp = int(time.time())
         with open(f"history/{self.name}.log", "at", encoding="utf-8") as file:
@@ -69,15 +74,13 @@ class Exchange:
                     print(f"Error! {status}")
                 else:
                     self.current_exchange = decoded_response
-                    self.update_rate()
+                    for coin_name in self.coins:
+                        self.coins[coin_name].update_rate(self._get_rate(coin_name))
             except:
                 print("Can't update exchange rates!")
-    
-    def update_rate(self):
-        for coin_name in self.coins:
-            self.coins[coin_name].exchange_rate = self.get_rate(coin_name)
 
-    def get_rate(self, coin):
+
+    def _get_rate(self, coin):
         """Gets the current exhange rate. Throws KeyError for unsupported coin."""
         rate = 0
         try:
