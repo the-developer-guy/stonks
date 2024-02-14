@@ -10,6 +10,11 @@ class Coin:
         self.name = name
         self.exchange_rate = 0
 
+    def log_rate(self):
+        timestamp = int(time.time())
+        with open(f"history/{self.name}.log", "at", encoding="utf-8") as file:
+            file.write(f"{timestamp},{self.exchange_rate}\n")
+
 
 class Exchange:
     
@@ -64,7 +69,6 @@ class Exchange:
                     print(f"Error! {status}")
                 else:
                     self.current_exchange = decoded_response
-                    self.log_rate(self.coins_to_check)
                     self.update_rate()
             except:
                 print("Can't update exchange rates!")
@@ -95,14 +99,6 @@ class Exchange:
     
     def is_supported_coin(self, coin):
         return coin in self.supported_coins
-    
-    def log_rate(self, coins=None):
-        timestamp = int(time.time())
-        if coins is None:
-            coins = self.watched_coins
-        for coin in coins:
-            with open(f"history/{coin}.log", "at", encoding="utf-8") as file:
-                file.write(f"{timestamp},{self.get_rate(coin)}\n")
 
 
 class Wallet:
