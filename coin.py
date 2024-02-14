@@ -1,6 +1,7 @@
 import requests
 import json
 from datetime import datetime
+import time
 
 
 class Exchange:
@@ -9,6 +10,7 @@ class Exchange:
         self.coins = {coin for coin in coins}
         self.current_exchange = {}
         self.exchange_history = []
+        self.watched_coins = set()
         self.list_of_coins()
         self.update()
 
@@ -73,6 +75,14 @@ class Exchange:
     
     def is_supported_coin(self, coin):
         return coin in self.supported_coins
+    
+    def log_rate(self, coins=None):
+        timestamp = int(time.time())
+        if coins is None:
+            coins = self.watched_coins
+        for coin in coins:
+            with open(f"history/{coin}.log", "at", encoding="utf-8") as file:
+                file.write(f"{timestamp},{self.get_rate(coin)}")
 
 
 class Wallet:
