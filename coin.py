@@ -81,7 +81,7 @@ class Exchange:
 
 
     def _get_rate(self, coin):
-        """Gets the current exhange rate. Throws KeyError for unsupported coin."""
+        """For interal use only. Gets the current exhange rate."""
         rate = 0
         try:
             rate = self.current_exchange[coin]["usd"]
@@ -89,6 +89,15 @@ class Exchange:
             print(f"Unknown coin: {coin}")
         return rate
     
+    def get_rate(self, coin):
+        """Gets the current exhange rate."""
+        rate = 0
+        try:
+            rate = self.coins[coin].exchange_rate
+        except KeyError:
+            print(f"Unknown coin: {coin}")
+        return rate
+
     def add_coins(self, coins):
         match coins:
             case dict():
