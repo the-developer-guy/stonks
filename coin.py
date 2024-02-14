@@ -86,9 +86,9 @@ class Exchange:
         match coins:
             case dict():
                 for key in coins:
-                    self.coins.add(key)
+                    self.coins.add({key: Coin(key)})
             case str():
-                self.coins.add(coins)
+                self.coins.add({coins: Coin(coins)})
             case _:
                 print("Unsupported input")
         self.coins_to_check = {coin for coin in self.coins if coin in self.supported_coins}
