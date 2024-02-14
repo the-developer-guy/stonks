@@ -8,20 +8,27 @@ import os
 class Coin:
     def __init__(self, name: str) -> None:
         self.name = name
-        self.exchange_rate = 0
+        self.exchange_rate = [(0,0)]
+        self.load_rate()
+    
+    def load_rate(self):
+        with open(f"history/{self.name}.log", "rt", encoding="utf-8") as file:
+            for line in file:
+                timestamp, value = line.split(",")
+                self.exchange_rate.append((timestamp, float(value)))
 
     def update_rate(self, rate):
-        if rate != self.exchange_rate:
-            self.exchange_rate = rate
-            self.log_rate()
+        if rate != self.exchange_rate[-1]:
+            timestamp = int(time.time())
+            self.exchange_rate.append((timestamp, rate))
+            self.log_rate(timestamp, rate)
     
     def get_rate(self):
-        return self.exchange_rate
+        return self.exchange_rate[-1][1]
 
-    def log_rate(self):
-        timestamp = int(time.time())
+    def log_rate(self, rate: float, timestamp: int):
         with open(f"history/{self.name}.log", "at", encoding="utf-8") as file:
-            file.write(f"{timestamp},{self.exchange_rate}\n")
+            file.write(f"{timestamp},{rate}\n")
 
 
 class Exchange:
