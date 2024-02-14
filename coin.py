@@ -17,6 +17,8 @@ class Coin:
                 for line in file:
                     timestamp, value = line.split(",")
                     self.exchange_rate.append((timestamp, float(value)))
+        if len(self.exchange_rate) == 0:
+            self.exchange_rate.append((0,0))
 
     def update_rate(self, rate):
         if rate != self.exchange_rate[-1][1]:
@@ -90,8 +92,11 @@ class Exchange:
                 else:
                     self.current_exchange = decoded_response
                     for coin_name in self.coins:
-                        self.coins[coin_name].update_rate(self._get_rate(coin_name))
-            except:
+                        current_coin = self.coins[coin_name]
+                        current_rate = self._get_rate(coin_name)
+                        current_coin.update_rate(current_rate)
+            except Exception as e:
+                print(e)
                 print("Can't update exchange rates!")
 
 
