@@ -165,3 +165,9 @@ class ChartWidget:
         self.btc_history.append(self.exchange.get_rate("bitcoin"))
         self.line, = self.ax.plot(self.btc_history, color='green')
         self.canvas.draw()
+
+    def load_history(self):
+        with open("history/bitcoin.log", "rt", encoding="utf-8") as file:
+            for line in file:
+                timestamp, value = line.split(",")
+                self.btc_history.append(float(value))
