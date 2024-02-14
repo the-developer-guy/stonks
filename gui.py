@@ -164,7 +164,7 @@ class ChartWidget:
         self.canvas.get_tk_widget().grid(row=0, column=0, sticky="NWSE")
 
     def update(self):
-        self.btc_history.append(self.exchange.get_rate("bitcoin"))
+        self.btc_history = [coin[1] for coin in self.exchange.coins["bitcoin"].exchange_rate]
         self.line, = self.ax.plot(self.btc_history, color='green')
         self.canvas.draw()
 
