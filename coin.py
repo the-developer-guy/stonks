@@ -4,6 +4,13 @@ from datetime import datetime
 import time
 import os
 
+
+class Coin:
+    def __init__(self, name: str) -> None:
+        self.name = name
+        self.exchange_rates = []
+
+
 class Exchange:
     
     def __init__(self, coins: set = set()) -> None:
