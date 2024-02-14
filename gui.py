@@ -150,6 +150,7 @@ class ChartWidget:
         self.frame.columnconfigure(0, weight=1)
         self.exchange = exhange
         self.btc_history = []
+        self.load_history()
 
         self.fig = Figure(dpi=100)
         self.ax = self.fig.add_subplot()
