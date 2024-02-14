@@ -14,6 +14,9 @@ class Coin:
         if rate != self.exchange_rate:
             self.exchange_rate = rate
             self.log_rate()
+    
+    def get_rate(self):
+        return self.exchange_rate
 
     def log_rate(self):
         timestamp = int(time.time())
@@ -93,7 +96,7 @@ class Exchange:
         """Gets the current exhange rate."""
         rate = 0
         try:
-            rate = self.coins[coin].exchange_rate
+            rate = self.coins[coin].get_rate()
         except KeyError:
             print(f"Unknown coin: {coin}")
         return rate
