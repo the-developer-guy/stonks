@@ -171,13 +171,13 @@ class Wallet:
         return self.sum_amount() + self.fiat
 
     def buy(self, amount: float, coin: str):
-        if coin not in self.supported_coins:
+        if not self.exchange.is_supported_coin(coin):
             print(f"Unsupported coin: {coin}")
             raise TypeError(f"Unsupported coin: {coin}")
         if coin not in self.coins:
             self.coins[coin] = 0
         self.exchange.update()
-        required_fiat = self.get_exchange_rate(coin) * amount
+        required_fiat = self.exchange.get_rate(coin) * amount
         if self.fiat >= required_fiat:
             self.fiat -= required_fiat
             self.coins[coin] += amount
@@ -188,7 +188,7 @@ class Wallet:
             return False
 
     def sell(self, amount: float, coin: str):
-        if coin not in self.supported_coins:
+        if not self.exchange.is_supported_coin(coin):
             print(f"Unsupported coin: {coin}")
             raise TypeError(f"Unsupported coin: {coin}")
         available_amount = self.coins[coin]
@@ -197,7 +197,7 @@ class Wallet:
             return False
         if available_amount >= amount:
             self.exchange.update()
-            fiat_got = amount * self.get_exchange_rate(coin)
+            fiat_got = amount * self.exchange.get_rate(coin)
             self.fiat += fiat_got
             self.coins[coin] -= amount
             self.save()
