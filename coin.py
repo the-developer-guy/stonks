@@ -50,6 +50,7 @@ class Exchange:
                     print(f"Error! {status}")
                 else:
                     self.current_exchange = decoded_response
+                    self.log_rate(self.coins_to_check)
             except:
                 print("Can't update exchange rates!")
 
