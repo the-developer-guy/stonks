@@ -8,13 +8,13 @@ import os
 class Coin:
     def __init__(self, name: str) -> None:
         self.name = name
-        self.exchange_rates = []
+        self.exchange_rate = 0
 
 
 class Exchange:
     
     def __init__(self, coins: set = set()) -> None:
-        self.coins = {coin for coin in coins}
+        self.coins = {coin: Coin(coin) for coin in coins}
         self.current_exchange = {}
         self.exchange_history = []
         self.watched_coins = set()
@@ -65,8 +65,13 @@ class Exchange:
                 else:
                     self.current_exchange = decoded_response
                     self.log_rate(self.coins_to_check)
+                    self.update_rate()
             except:
                 print("Can't update exchange rates!")
+    
+    def update_rate(self):
+        for coin_name in self.coins:
+            self.coins[coin_name].exchange_rate = self.get_rate(coin_name)
 
     def get_rate(self, coin):
         """Gets the current exhange rate. Throws KeyError for unsupported coin."""
