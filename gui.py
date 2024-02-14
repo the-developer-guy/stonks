@@ -16,7 +16,7 @@ class MainWindow:
         
         self.balance = BalanceWidget(self.mainframe, self.wallet)
 
-        self.trade = TradeWidget(self.mainframe, self.wallet)
+        self.trade = TradeWidget(self.mainframe, self.wallet, self.exchange)
         self.chart = ChartWidget(self.mainframe, self.exchange)
         
         self.trade.register_callback(self.balance.update_balance)
@@ -75,8 +75,9 @@ class BalanceWidget:
         self.balance_label["text"] = self.wallet
 
 class TradeWidget:
-    def __init__(self, parent: ttk.Frame, wallet: Wallet) -> None:
+    def __init__(self, parent: ttk.Frame, wallet: Wallet, exchange: Exchange) -> None:
         self.wallet = wallet
+        self.exchange = exchange
         self.update_callback = None
         self.frame = ttk.Frame(parent)
         self.frame.rowconfigure(0, weight=0)
@@ -88,7 +89,7 @@ class TradeWidget:
 
         self.label = ttk.Label(self.frame, text="Exchange", borderwidth=3, relief="sunken")
         self.coin_var = tk.StringVar()
-        self.coin = ttk.Combobox(self.frame, textvariable=self.coin_var, values=self.wallet.exchange.supported_coins)
+        self.coin = ttk.Combobox(self.frame, textvariable=self.coin_var, values=self.exchange.supported_coins)
         self.amount = ttk.Entry(self.frame)
         self.buy_button = ttk.Button(self.frame, text="Buy", command=self.buy)
         self.sell_button = ttk.Button(self.frame, text="Sell", command=self.sell)
