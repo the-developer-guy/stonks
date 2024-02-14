@@ -102,7 +102,7 @@ class Exchange:
         match coins:
             case dict():
                 for key in coins:
-                    self.coins.add({key: Coin(key)})
+                    self.coins[key] = Coin(key)
             case str():
                 self.coins.add({coins: Coin(coins)})
             case _:
