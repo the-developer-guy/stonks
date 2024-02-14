@@ -2,7 +2,7 @@ import requests
 import json
 from datetime import datetime
 import time
-
+import os
 
 class Exchange:
     
@@ -12,6 +12,13 @@ class Exchange:
         self.exchange_history = []
         self.watched_coins = set()
         self.list_of_coins()
+        if not os.path.isdir("history"):
+            try:
+                os.mkdir("history")
+            except OSError as e:
+                print("Couldn't make folder for coin history!")
+                print(e)
+                raise
         self.update()
 
     def list_of_coins(self):
@@ -83,7 +90,7 @@ class Exchange:
             coins = self.watched_coins
         for coin in coins:
             with open(f"history/{coin}.log", "at", encoding="utf-8") as file:
-                file.write(f"{timestamp},{self.get_rate(coin)}")
+                file.write(f"{timestamp},{self.get_rate(coin)}\n")
 
 
 class Wallet:
