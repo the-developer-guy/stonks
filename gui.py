@@ -1,8 +1,15 @@
+import sys
+import os
 import tkinter as tk
 from tkinter import ttk, PhotoImage, messagebox
 from datetime import datetime
 from coin import Wallet
 
+def resource_path(relative_path):
+    """Special thanks to coderslegacy:
+    https://coderslegacy.com/add-image-data-files-in-pyinstaller-exe/"""
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 class MainWindow:
     def __init__(self, root: ttk.Frame) -> None:
@@ -15,7 +22,7 @@ class MainWindow:
 
         self.trade = TradeWidget(self.mainframe, self.wallet)
 
-        self.placeholder_chart = PhotoImage(file="background.png")
+        self.placeholder_chart = PhotoImage(file=resource_path("background.png"))
         self.placeholder_chart_label = ttk.Label(self.mainframe, image=self.placeholder_chart, borderwidth=3, relief="sunken")
         
         self.trade.register_callback(self.balance.update_balance)
